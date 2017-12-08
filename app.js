@@ -134,4 +134,5 @@ function SAQsScore()
 function SUMScore()
 { var sum= completionScore() + RadioScore() + CheckBoxScore() + TorFScore()+ SAQsScore();
   return sum;
+  alert("你的得分是"+sum)
 }
