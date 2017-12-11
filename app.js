@@ -1,6 +1,6 @@
-const main = require('./main/main');
+//const main = require('./main/main');
 
-main();
+//main();
 
 //将标准答案写入一个对象集合，以便之后选取试卷答案和标准答案核对
 let Answer=
@@ -56,7 +56,7 @@ let Answer=
             Score :"10"
              }],
     SAQs:[{ QuestionNumber : "5",
-            Content :"模型是对现实世界的简化和抽象，模型是对所研究的系统、过程、事物或概念的一种表达形式。可以是物理实体；可以是某种图形；或者是一种数学表达式。",
+            Content :"测试文本",
             AnswerID:"5",
             Score :"20" 
             }]
@@ -65,23 +65,24 @@ let Answer=
 //该函数专门计算填空题分数。
 function completionScore()
 { var AnsComp= Answer.completion;
-  var sum;
+  var sum=0;
     for(i=0;i<AnsComp.length;i++) 
     {
-        var StuAnswer = document.getElementById(AnsComp[i].AnswerID).nodeValue;
-        sum += StuAnswer==AnsComp[i].Content?AnsComp[i].Score : 0 ;
+        var StuAnswer = document.getElementById(AnsComp[i].AnswerID).value;
+        sum +=   Number( StuAnswer==AnsComp[i].Content?AnsComp[i].Score : 0 );
     }
+  
 return sum;
 }
 
 //该函数专门计算单选题分数
 function RadioScore()
 { var AnsRadio= Answer.Radio;
-  var sum;
+  var sum=0;
   for(i=0;i<AnsRadio.length;i++)
   {
       if( document.getElementById(AnsRadio[i].AnswerID).checked )
-      { sum+= AnsRadio[i].Score; }
+      { sum+=Number( AnsRadio[i].Score ); }
   }
   return sum;
 }
@@ -89,17 +90,17 @@ function RadioScore()
 //该函数专门计算多选题分数
 function CheckBoxScore()
 { var AnsCBox= Answer.CheckBox;
-  var sum;
+  var sum=0;
+
   for (i=0;i<AnsCBox.length;i++)
-  { var bool=true;
+  { 
+    var bool=true;
        for(k=0;k<AnsCBox[i].AnswerID.length;k++)
     {
-        bool=bool && document.getElementById(AnsCBox[i].AnswerID[k]).checked;
+        bool=bool&&document.getElementById(AnsCBox[i].AnswerID[k]).checked;
     }
-    
-    if( bool=true )
-     { sum+=AnsCBox[i].Score;}
-
+   
+    sum+= bool?Number( AnsCBox[i].Score):0;   
   }
   return sum;
 }
@@ -108,11 +109,11 @@ function CheckBoxScore()
 function TorFScore()
 {
     var AnsTorF= Answer.TorF;
-    var sum;
+    var sum=0;
     for(i=0;i<AnsTorF.length;i++)
     {
         if( document.getElementById(AnsTorF[i].AnswerID).checked )
-        { sum+= AnsTorF[i].Score; }
+        { sum+= Number( AnsTorF[i].Score); }
     }
     return sum;
 }
@@ -120,11 +121,11 @@ function TorFScore()
 //该函数专门计算简答题的分数
 function SAQsScore()
 { var AnsSAQ= Answer.SAQs;
-    var sum;
+    var sum=0;
       for(i=0;i<AnsSAQ.length;i++) 
       {
-          var StuAnswer = document.getElementById(AnsSAQ[i].AnswerID).childNodes[0].nodeValuea;
-          sum += StuAnswer==AnsSAQ[i].Content?AnsSAQ[i].Score : 0 ;
+          var StuAnswer = document.getElementById(AnsSAQ[i].AnswerID).childNodes[0].nodeValue;
+          sum += StuAnswer==AnsSAQ[i].Content?Number( AnsSAQ[i].Score) : 0 ;
       }
   return sum;
 
@@ -133,6 +134,6 @@ function SAQsScore()
 //该函数专门计算总分
 function SUMScore()
 { var sum= completionScore() + RadioScore() + CheckBoxScore() + TorFScore()+ SAQsScore();
-  return sum;
+  
   alert("你的得分是"+sum)
 }
